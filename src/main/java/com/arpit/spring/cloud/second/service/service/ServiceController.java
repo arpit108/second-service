@@ -16,14 +16,16 @@ import org.springframework.web.client.RestTemplate;
 public class ServiceController {
     @Autowired
    EurekaClient client;
+    @Autowired
+    RestTemplate restTemplate;
 
     @GetMapping("/callFirstService")
     public String callFirstService()
     {
-        RestTemplate restTemplate = new RestTemplate();
+        //RestTemplate restTemplate = new RestTemplate();
         InstanceInfo nextServerFromEureka = client.getNextServerFromEureka("first-service", false);
         String basURL=nextServerFromEureka.getHomePageUrl();
-        ResponseEntity <String> response=  restTemplate.exchange(basURL,HttpMethod.GET,null,String.class);
+        ResponseEntity <String> response=  restTemplate.exchange("http://first-service/one",HttpMethod.GET,null,String.class);
        // System.out.print(response.getBody());
        return response.getBody();
     }
